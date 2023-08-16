@@ -1,0 +1,40 @@
+#!/bin/bash
+# Clone a repo in the worktree fashion and then setup main branch.
+#
+# Usage: clone <repo>
+#  <repo> is the repo to clone.
+
+set -e
+
+ascii-t "Git Clone for Git Worktrees."
+echo ""
+echo ""
+echo ""
+ascii-t "By Dr Oliver Chalkley"
+echo ""
+echo ""
+echo ""
+
+if [ -z "${1}" ]; then
+  echo "Usage: clone <repo>"
+  exit 1
+fi
+
+echo ""
+echo ""
+echo ""
+echo "Cloning ${1}..."
+echo ""
+echo ""
+echo ""
+repo_address=${1}
+repo_name = awk -F "/" '{print $2}' | awk -F ":" '{print $2}' <<< "${1}"
+git clone-wts "${repo_address}"
+cd "${repo_name}"
+git worktree add main main
+cd main
+git branch --set-upstream-to=origin/main main
+git pull
+cd ..
+pwd
+ls

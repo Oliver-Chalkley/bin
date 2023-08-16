@@ -1,0 +1,18 @@
+#!/bin/bash
+# ascii-t.sh:
+# Converts input into ASCII title (i.e., slant.flf) font by using the ascii command.
+# Usage: ascii-t.sh "string"
+# Example: ascii-t.sh "Hello World!"
+# Author: Oliver Chalkley
+# Date: 2023-08-16
+
+# Check if input is empty
+# If input is empty, print usage message
+if [ -z "$1" ]; then
+    echo "Usage: ascii-t.sh \"string\""
+    echo "Example: ascii-t.sh \"Hello World!\""
+    exit 1
+else
+    # If input is not empty, print input in ASCII title font
+    ascii slant.flf "$*"
+fi

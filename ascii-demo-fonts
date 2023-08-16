@@ -1,0 +1,12 @@
+#!/bin/bash
+# Purpose: Display all ASCII fonts
+# Author: Dr Oliver Chalkley under GPL v2.x+
+# Usage: ./demo-ascii-fonts.sh
+# -------------------------------------------------------
+
+for font_file in $(ls /usr/share/figlet/*.flf)
+do
+	echo "Font file: ${font_file}: "
+	filename=$(basename ${font_file})
+	ascii ${filename} "Linux is the best!"
+done

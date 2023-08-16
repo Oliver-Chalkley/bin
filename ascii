@@ -1,0 +1,19 @@
+#!/bin/bash
+# ascii.sh
+# Author: Oliver Chalkley
+# Description: Prints input as ASCII
+# Usage: ./ascii.sh <font> <input> 
+# Example: ./ascii.sh big.flf "Hello World"
+# Dependencies: figlet
+# License: MIT
+# Version: 1.0.0
+
+# Check if figlet is installed
+# If not, return error
+# If so, print input as ASCII
+if ! [ -x "$(command -v figlet)" ]; then
+  echo 'Error: figlet is not installed.' >&2
+  exit 1
+else
+  figlet -t -k -f /usr/share/figlet/${1} "$2"
+fi
