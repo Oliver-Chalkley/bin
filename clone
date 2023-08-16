@@ -27,8 +27,12 @@ echo "Cloning ${1}..."
 echo ""
 echo ""
 echo ""
+
 repo_address=${1}
-repo_name = awk -F "/" '{print $2}' | awk -F ":" '{print $2}' <<< "${1}"
+echo "Repo address: ${repo_address}"
+repo_name=$(basename "${1}" .git)
+echo "Repo name: ${repo_name}"
+
 git clone-wts "${repo_address}"
 cd "${repo_name}"
 git worktree add main main
