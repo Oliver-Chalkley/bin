@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#huggingface-cli login # manually add token
+# or using an environment variable
+HUGGINGFACE_TOKEN=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
+huggingface-cli login --token $HUGGINGFACE_TOKEN
