@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Threshold set for 100GB, converted to KB
+threshold=$((100 * 1024 * 1024))
+
+# Using df to get filesystem disk space usage, skipping the header row
+# Output format: Filesystem size used available percent mounted on
+df -k | tail -n +2 | while read -r line; do
+  # Extracting the available space and the mount point
+  available=$(echo $line | awk '{print $4}')
+  mount_point=$(echo $line | awk '{print $6}')
+
+  # Check if available space is less than the threshold
+  if [ "$available" -lt "$threshold" ]; then
+    echo "Warning: Available disk space on $mount_point is below 100GB"
+  fi
+done

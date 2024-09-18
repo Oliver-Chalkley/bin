@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# A script to scan a subnet and extract live host IPs using nmap, grep, and awk
+# By default, it runs the nmap command and overwrites the local_nmap.scan file if it exists
+# If the --use-cache or -c flag is passed, it uses the existing local_nmap.scan file or creates it if it doesn't exist
+
+# Exit on any error
+set -e
+
+# Function to display usage information
+usage() {
+  echo "Usage: $0 [--use-cache|-c] [subnet]"
+  echo "Example: $0 10.63.172.0/24"
+  echo "Example with cache: $0 --use-cache"
+}
+
+# Default subnet
+DEFAULT_SUBNET="10.63.172.0/24"
+USE_CACHE=false
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+  case $1 in
+    -c|--use-cache) USE_CACHE=true ;;
+    -h|--help) usage; exit 0 ;;
+    *) SUBNET=$1 ;;
+  esac
+  shift
+done
+
+# Set the subnet to default if not provided
+SUBNET=${SUBNET:-$DEFAULT_SUBNET}
+
+# Check if nmap is installed
+if ! command -v nmap &> /dev/null; then
+  echo "Error: nmap is not installed."
+  exit 1
+fi
+
+# Define the output file
+OUTPUT_FILE="local_nmap.scan"
+
+# Function to run nmap and write to the output file
+run_nmap() {
+  echo "Running nmap and writing output to $OUTPUT_FILE..."
+  nmap -v -sn "$SUBNET" | grep -v "host down" | grep "report" | awk '{print $5}' > "$OUTPUT_FILE"
+}
+
+# Run nmap and write to the file unless --use-cache flag is provided
+if [ "$USE_CACHE" = true ]; then
+  if [ ! -f "$OUTPUT_FILE" ]; then
+    echo "Cache file $OUTPUT_FILE does not exist. Creating it..."
+    run_nmap
+  else
+    echo "Using cached nmap output from $OUTPUT_FILE."
+  fi
+else
+  run_nmap
+fi
+
+# Display the output for verification
+echo "Nmap scan output:"
+cat "$OUTPUT_FILE"

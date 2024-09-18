@@ -1,0 +1,32 @@
+#!/bin/bash
+# Copy my personal clipboard from remote server to here.
+#
+# Usage: get_cp <ssh_alias>
+#  <ssh_alias> is the alias for the remote server in your ~/.ssh/config file.
+#  This server must have the ~/personal_clipboard/default.txt path.
+
+set -e
+
+ascii-t "Remote copy/paste"
+echo ""
+echo ""
+echo ""
+ascii-t "By Dr Oliver Chalkley"
+echo ""
+echo ""
+echo ""
+
+if [ -z "${1}" ]; then
+  echo "Usage: get_cp <ssh_alias>"
+  exit 1
+fi
+
+echo ""
+echo ""
+echo ""
+echo "Getting personal clipboard from ${1}..."
+echo ""
+echo ""
+echo ""
+
+rsync -aP ${1}:~/personal_clipboard/default.txt ~/personal_clipboard/default.txt
