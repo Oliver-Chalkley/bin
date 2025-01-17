@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Function to create files totaling specified size
+create_files() {
+    local output_dir="$1"
+    local total_size_gb="$2"
+    local num_files="$3"
+
+    local single_file_size_gb=$total_size_gb
+    local file_size_mb=$((total_size_gb * 1024 / num_files))
+
+    echo "Creating $num_files files totaling ${total_size_gb}GB in $output_dir..."
+
+    # Create a single large file first if total size matches
+    if [[ $num_files -eq 1 ]]; then
+        dd if=/dev/zero of="$output_dir/file_single_${single_file_size_gb}gb" bs=1G count=$single_file_size_gb
+    fi
+
+    for i in $(seq -w 1 $num_files); do
+        dd if=/dev/zero of="$output_dir/file_$i" bs=1M count=$file_size_mb > /dev/null 2>&1
+    done
+    echo "$num_files files created in directory: $output_dir"
+}
+
+# Main script execution
+if [[ $# -lt 3 ]]; then
+    echo "Usage: $0 <output_dir> <data_size_in_gb> <number_of_files>"
+    exit 1
+fi
+
+OUTPUT_DIR="$1"
+DATA_SIZE_GB="$2"
+NUM_FILES="$3"
+
+mkdir -p "$OUTPUT_DIR"
+
+create_files "$OUTPUT_DIR" "$DATA_SIZE_GB" "$NUM_FILES"
+
+echo "All files have been successfully created."
